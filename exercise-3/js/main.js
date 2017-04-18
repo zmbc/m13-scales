@@ -97,11 +97,16 @@ $(function() {
               .attr('x', function(d) {
                   return xScale(d.state);
               })
+              .attr('height', 0)
+              .attr('y', drawHeight)
               .attr('class', 'bar')
               .on('mouseover', tip.show)
               .on('mouseout', tip.hide)
               .merge(bars)
-              .transition(500)
+              .transition()
+              .duration(1000)
+              .ease(d3.easeElastic)
+              .delay(function(d) {return xScale(d.state);})
               .attr('width', xScale.bandwidth())
               .attr('y', function(d) {
                   return yScale(d.percent);
@@ -160,10 +165,10 @@ $(function() {
           yAxis.scale(yScale);
 
           // Render (call) your xAxis in your xAxisLabel
-          xAxisLabel.call(xAxis);
+          xAxisLabel.transition(700).call(xAxis);
 
           // Render (call) your yAxis in your yAxisLabel
-          yAxisLabel.call(yAxis);
+          yAxisLabel.transition(700).call(yAxis);
 
           // Update xAxisText and yAxisText labels
           xAxisText.text('State');
@@ -171,7 +176,6 @@ $(function() {
         }
 
         function addTip() {
-          // Add tip
           var tip = d3.tip().attr('class', 'd3-tip').html(function(d) {
               return d.state_name;
           });
